@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тренажёр: Формы базы данных</title>
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--text:#26334d;--muted:#68758d;--blue:#5479e8;--blue2:#eaf0ff;--green:#21865b;--greenbg:#e6f7ee;--red:#b9414b;--redbg:#fff0f0;--line:#e1e7f1;--amber:#fff6df}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{padding:34px 18px;text-align:center;background:linear-gradient(135deg,#e6edff,#f4edff);border-bottom:1px solid var(--line)}header h1{margin:0 0 8px;font-size:clamp(25px,4vw,36px)}header p{margin:auto;max-width:760px;color:var(--muted)}
+main{width:min(1050px,94%);margin:24px auto 50px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:23px;margin-bottom:20px;box-shadow:0 5px 18px #26334d08}
+h2{font-size:22px;margin:0 0 12px}h3{font-size:17px;margin:16px 0 8px}.muted{color:var(--muted)}.tag{display:inline-block;background:var(--blue2);color:#385ac2;border-radius:8px;padding:3px 9px;font-size:12px;font-weight:bold;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-weight:bold;margin-bottom:5px}.field input,.field select,select,input[type=text],input[type=email],input[type=number],input[type=date]{width:100%;padding:11px;border:1px solid #cfd8e8;border-radius:9px;font:inherit;background:#fff;color:var(--text)}input:focus,select:focus{outline:2px solid #c6d4ff;border-color:var(--blue)}
+button{border:0;border-radius:10px;padding:10px 15px;background:var(--blue);color:#fff;font-size:14px;font-weight:bold;cursor:pointer;margin:7px 5px 0 0}button:hover{filter:brightness(.96)}button.secondary{background:var(--blue2);color:#385ac2}button.danger{background:#fff0f0;color:var(--red)}button:disabled{opacity:.55;cursor:not-allowed}
+.note{background:#f7f9fd;border:1px solid var(--line);padding:13px;border-radius:11px;margin:12px 0}.notice{background:var(--amber);padding:13px;border-radius:10px;border:1px solid #f0dfad}.feedback{display:none;padding:12px;border-radius:10px;margin-top:12px}.feedback.good{display:block;background:var(--greenbg);color:var(--green)}.feedback.bad{display:block;background:var(--redbg);color:var(--red)}.feedback.info{display:block;background:var(--blue2);color:#385ac2}
+.progress{height:11px;background:#e7ecf5;border-radius:20px;overflow:hidden;margin:12px 0}.progress>div{height:100%;width:0;background:var(--blue);transition:width .25s}.scoreline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:9px;text-align:left}th{background:#f0f4fc}
+.choice{display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:7px 0;cursor:pointer;font-weight:normal}.choice:has(input:checked){background:var(--blue2);border-color:var(--blue)}.choice input{margin-right:8px}
+.draggrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dropzone{min-height:54px;padding:10px;border:2px dashed #cbd5e6;border-radius:10px;background:#fafbff}.draggable{display:inline-block;padding:8px 11px;margin:4px;background:#eaf0ff;border:1px solid #c8d5ff;border-radius:8px;cursor:grab;user-select:none}.draggable.selected{outline:3px solid #8fa8ff}.matchrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:10px 0}.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);padding:20px}
+@media(max-width:620px){.grid,.draggrid,.matchrow{grid-template-columns:1fr}.card{padding:17px}header{padding:27px 14px}table{font-size:12px}th,td{padding:6px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Практикум: формы базы данных</h1>
+  <p>Интерактивный тренажёр по информатике: заполняй записи, исправляй ошибки и проверь свои знания.</p>
+</header>
+<main>
+<section class="card" id="studentCard">
+  <div class="tag">ПЕРЕД НАЧАЛОМ</div>
+  <h2>Данные студента</h2>
+  <p class="muted">Заполни данные, чтобы преподаватель мог определить, кому принадлежит результат.</p>
+  <div class="grid">
+    <div class="field"><label for="surname">Фамилия *</label><input id="surname" type="text" autocomplete="family-name" placeholder="Например, Иванов" required></div>
+    <div class="field"><label for="firstname">Имя *</label><input id="firstname" type="text" autocomplete="given-name" placeholder="Например, Алексей" required></div>
+    <div class="field"><label for="group">Группа *</label><input id="group" type="text" placeholder="Например, П-21" required></div>
+    <div class="field"><label for="studentEmail">Электронная почта (необязательно)</label><input id="studentEmail" type="email" placeholder="student@example.com"></div>
+  </div>
+  <p class="muted">Звёздочкой отмечены обязательные поля. Данные используются для подписи результата.</p>
+</section>
+
+<section class="card">
+  <div class="tag">ТЕОРИЯ</div><h2>Что такое форма базы данных?</h2>
+  <p>Форма — это окно для добавления, просмотра и изменения записей в базе данных.</p>
+  <div class="note"><b>Поле</b> — отдельная характеристика объекта, например «Название товара».<br><b>Запись</b> — набор данных об одном объекте.<br><b>Таблица</b> — набор записей, организованных по полям.</div>
+  <table><thead><tr><th>Код</th><th>Название товара</th><th>Цена, руб.</th><th>Количество</th></tr></thead><tbody><tr><td>101</td><td>Тетрадь</td><td>2.50</td><td>30</td></tr><tr><td>102</td><td>Ручка</td><td>1.80</td><td>50</td></tr></tbody></table>
+  <p class="muted">В этой таблице каждая строка — запись, каждый столбец — поле.</p>
+</section>
+
+<section class="card">
+  <div class="scoreline"><div><h2>Прогресс и баллы</h2><span class="muted" id="progressText">Выполнено заданий: 0 из 6</span></div><strong><span id="score">0</span> / 20 баллов</strong></div>
+  <div class="progress"><div id="progressBar"></div></div>
+</section>
+
+<section class="card" id="task1">
+  <div class="tag">ЗАДАНИЕ 1 · 2 БАЛЛА</div><h2>Проверь понимание</h2>
+  <p><b>1. Что такое поле базы данных?</b></p>
+  <label class="choice"><input type="radio" name="q11" value="a"> Все данные об одном объекте</label>
+  <label class="choice"><input type="radio" name="q11" value="b"> Отдельная характеристика объекта</label>
+  <label class="choice"><input type="radio" name="q11" value="c"> Окно программы</label>
+  <p><b>2. Для чего нужна форма?</b></p>
+  <label class="choice"><input type="radio" name="q12" value="a"> Для ввода и просмотра данных</label>
+  <label class="choice"><input type="radio" name="q12" value="b"> Только для рисования</label>
+  <label class="choice"><input type="radio" name="q12" value="c"> Для выключения компьютера</label>
+  <button onclick="checkTask1()">Проверить</button><div class="feedback" id="fb1" aria-live="polite"></div>
+</section>
+
+<section class="card" id="task2">
+  <div class="tag">ЗАДАНИЕ 2 · 3 БАЛЛА</div><h2>Заполни форму товара</h2>
+  <p>Внеси данные точно по условию: код — 103, название — «Карандаш», цена — 3,50 руб., количество — 20 штук.</p>
+  <div class="grid">
+    <div class="field"><label for="code">Код товара</label><input id="code" type="number" placeholder="Код"></div>
+    <div class="field"><label for="pname">Название товара</label><input id="pname" type="text" placeholder="Название"></div>
+    <div class="field"><label for="price">Цена, руб.</label><input id="price" type="number" min="0" step="0.01" placeholder="Цена"></div>
+    <div class="field"><label for="qty">Количество, шт.</label><input id="qty" type="number" min="0" step="1" placeholder="Количество"></div>
+  </div>
+  <button onclick="checkTask2()">Проверить и сохранить</button><button class="secondary" onclick="clearProduct()">Очистить форму</button>
+  <div class="feedback" id="fb2" aria-live="polite"></div>
+  <div id="recordPreview" class="hidden"><h3>Предварительный просмотр записи</h3><table><tbody id="recordTable"></tbody></table></div>
+</section>
+
+<section class="card" id="task3">
+  <div class="tag">ЗАДАНИЕ 3 · 2 БАЛЛА</div><h2>Найди ошибки в записи</h2>
+  <div class="note">Название: Ластик<br>Цена: −5 рублей<br>Количество: 3,5 штуки</div>
+  <p>Отметь две ошибки.</p>
+  <label class="choice"><input type="checkbox" name="err" value="price"> Цена отрицательная</label>
+  <label class="choice"><input type="checkbox" name="err" value="qty"> Количество предметов дробное</label>
+  <label class="choice"><input type="checkbox" name="err" value="name"> Неправильно указано название</label>
+  <button onclick="checkTask3()">Проверить</button><div class="feedback" id="fb3" aria-live="polite"></div>
+</section>
+
+<section class="card" id="task4">
+  <div class="tag">ЗАДАНИЕ 4 · 3 БАЛЛА</div><h2>Сопоставь поле и значение</h2>
+  <p>Выбери подходящее значение для каждого поля.</p>
+  <div class="matchrow"><b>Название товара</b><select id="m1"><option value="">Выбери значение</option><option value="name">Тетрадь</option><option value="qty">25</option><option value="price">2,50 руб.</option></select></div>
+  <div class="matchrow"><b>Количество</b><select id="m2"><option value="">Выбери значение</option><option value="name">Тетрадь</option><option value="qty">25</option><option value="price">2,50 руб.</option></select></div>
+  <div class="matchrow"><b>Цена</b><select id="m3"><option value="">Выбери значение</option><option value="name">Тетрадь</option><option value="qty">25</option><option value="price">2,50 руб.</option></select></div>
+  <button onclick="checkTask4()">Проверить</button><div class="feedback" id="fb4" aria-live="polite"></div>
+</section>
+
+<section class="card" id="task5">
+  <div class="tag">ЗАДАНИЕ 5 · 3 БАЛЛА</div><h2>Перетащи данные в подходящие поля</h2>
+  <p>Перетащи каждый элемент в соответствующую область. Если перетаскивание на устройстве неудобно, нажми на элемент, а затем на нужную область.</p>
+  <div class="note" id="dragBank">
+    <span class="draggable" draggable="true" data-value="name" tabindex="0">Кружка</span>
+    <span class="draggable" draggable="true" data-value="price" tabindex="0">12,90 руб.</span>
+    <span class="draggable" draggable="true" data-value="qty" tabindex="0">15 штук</span>
+  </div>
+  <div class="draggrid">
+    <div><b>Название товара</b><div class="dropzone" data-accept="name" tabindex="0">Перетащи сюда название</div></div>
+    <div><b>Цена</b><div class="dropzone" data-accept="price" tabindex="0">Перетащи сюда цену</div></div>
+    <div><b>Количество</b><div class="dropzone" data-accept="qty" tabindex="0">Перетащи сюда количество</div></div>
+  </div>
+  <button onclick="checkTask5()">Проверить</button><button class="secondary" onclick="resetDrag()">Сбросить элементы</button><div class="feedback" id="fb5" aria-live="polite"></div>
+</section>
+
+<section class="card" id="task6">
+  <div class="tag">ЗАДАНИЕ 6 · 7 БАЛЛОВ</div><h2>Итоговый тест</h2>
+  <p>Ответь на все вопросы. Каждый правильный ответ приносит 1 балл.</p>
+  <div id="quiz">
+    <p><b>1. Что обычно обозначает одна строка таблицы?</b></p>
+    <label class="choice"><input type="radio" name="q1" value="a"> Запись</label><label class="choice"><input type="radio" name="q1" value="b"> Поле</label><label class="choice"><input type="radio" name="q1" value="c"> Заголовок</label>
+    <p><b>2. Какое значение подходит для поля «Дата рождения»?</b></p>
+    <label class="choice"><input type="radio" name="q2" value="a"> Синий</label><label class="choice"><input type="radio" name="q2" value="b"> 15.04.2008</label><label class="choice"><input type="radio" name="q2" value="c"> Карандаш</label>
+    <p><b>3. Что делать, если обязательное поле пустое?</b></p>
+    <label class="choice"><input type="radio" name="q3" value="a"> Проверить данные и заполнить поле</label><label class="choice"><input type="radio" name="q3" value="b"> Ввести любые символы</label><label class="choice"><input type="radio" name="q3" value="c"> Всегда оставить пустым</label>
+    <p><b>4. Какое количество указано правильно?</b></p>
+    <label class="choice"><input type="radio" name="q4" value="a"> −8 штук</label><label class="choice"><input type="radio" name="q4" value="b"> 2,5 штуки</label><label class="choice"><input type="radio" name="q4" value="c"> 8 штук</label>
+    <p><b>5. Что сделать перед сохранением записи?</b></p>
+    <label class="choice"><input type="radio" name="q5" value="a"> Проверить правильность данных</label><label class="choice"><input type="radio" name="q5" value="b"> Закрыть форму без проверки</label><label class="choice"><input type="radio" name="q5" value="c"> Удалить названия полей</label>
+    <p><b>6. Какое значение подходит для поля «Цена»?</b></p>
+    <label class="choice"><input type="radio" name="q6" value="a"> Синий</label><label class="choice"><input type="radio" name="q6" value="b"> 4,50 руб.</label><label class="choice"><input type="radio" name="q6" value="c"> Тетрадь</label>
+    <p><b>7. Можно ли вводить отрицательное количество товара?</b></p>
+    <label class="choice"><input type="radio" name="q7" value="a"> Да, всегда</label><label class="choice"><input type="radio" name="q7" value="b"> Нет, для обычного остатка товара количество не может быть отрицательным</label><label class="choice"><input type="radio" name="q7" value="c"> Только если название длинное</label>
+  </div>
+  <button onclick="checkTask6()">Проверить итоговый тест</button><div class="feedback" id="fb6" aria-live="polite"></div>
+</section>
+
+<section class="card">
+  <div class="tag">ЗАВЕРШЕНИЕ</div><h2>Результат работы</h2>
+  <p id="finalText">Выполни задания, чтобы увидеть свой результат.</p>
+  <button onclick="showResult()">Подвести итог</button>
+  <button class="secondary" onclick="downloadResult()">Скачать результат (.txt)</button>
+  <button onclick="sendResult()">Отправить результат преподавателю</button>
+  <div class="feedback" id="emailFeedback" aria-live="polite"></div>
+  <div class="notice" style="margin-top:15px">
+    <b>Настройка отправки на почту:</b> чтобы результаты действительно приходили на адрес преподавателя, нужно один раз подключить EmailJS и указать его идентификаторы в коде ниже. До настройки кнопка отправки не сможет доставить письмо.
+  </div>
+</section>
+</main>
+<footer>Учебный тренажёр по информатике · Формы базы данных</footer>
+
+<!-- EmailJS: после настройки раскомментируйте строку подключения и укажите свои ID в коде ниже.
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+-->
+<script>
+const TEACHER_EMAIL = "irishafeskova@gmail.com";
+/* НАСТРОЙКА EMAILJS:
+  1) Зарегистрируйтесь на https://www.emailjs.com/
+  2) Подключите почтовый сервис и создайте шаблон письма.
+  3) В шаблоне используйте переменные: {{to_email}}, {{student_name}},
+     {{student_group}}, {{student_email}}, {{score}}, {{max_score}},
+     {{completed}}, {{details}}, {{sent_at}}.
+  4) Включите script EmailJS выше и заполните три значения ниже.
+*/
+const EMAILJS_PUBLIC_KEY = "ВСТАВЬТЕ_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "ВСТАВЬТЕ_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "ВСТАВЬТЕ_TEMPLATE_ID";
+
+const maxScore = 20;
+const taskMax = {1:2,2:3,3:2,4:3,5:3,6:7};
+const completed = {};
+const scores = {};
+const taskNames = {1:"Понятия",2:"Форма товара",3:"Поиск ошибок",4:"Сопоставление",5:"Перетаскивание",6:"Итоговый тест"};
+
+function updateProgress(){
+  const done=Object.keys(completed).length;
+  const score=Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById("score").textContent=score;
+  document.getElementById("progressBar").style.width=(done/6*100)+"%";
+  document.getElementById("progressText").textContent=`Выполнено заданий: ${done} из 6`;
+}
+function showFeedback(id,msg,type="info"){
+  const el=document.getElementById(id);el.textContent=msg;el.className="feedback "+type;
+}
+function saveTask(n,points){
+  if(completed[n]) return false;
+  completed[n]=true;scores[n]=points;updateProgress();return true;
+}
+function checkTask1(){
+  const a=document.querySelector('[name="q11"]:checked'),b=document.querySelector('[name="q12"]:checked');
+  if(!a||!b){showFeedback("fb1","Ответь на оба вопроса.","bad");return}
+  const p=(a.value==="b"?1:0)+(b.value==="a"?1:0);
+  if(saveTask(1,p))showFeedback("fb1",`Результат: ${p} из 2. ${p===2?"Отлично!":"Правильные ответы: отдельная характеристика объекта; ввод и просмотр данных."}`,p===2?"good":"info");
+  else showFeedback("fb1",`Задание уже оценено: ${scores[1]} из 2 баллов.`, "info");
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function checkTask2(){
+  const code=document.getElementById("code").value.trim(),name=document.getElementById("pname").value.trim(),price=document.getElementById("price").value.trim(),qty=document.getElementById("qty").value.trim();
+  if(!code||!name||!price||!qty){showFeedback("fb2","Заполни все четыре поля.","bad");return}
+  if(!Number.isInteger(+code)||+code<=0||!Number.isFinite(+price)||+price<0||!Number.isInteger(+qty)||+qty<0){showFeedback("fb2","Проверь формат: код — положительное целое число, цена — неотрицательная, количество — целое неотрицательное число.","bad");return}
+  const ok=+code===103&&name.toLocaleLowerCase("ru")==="карандаш"&&Math.abs(+price-3.5)<0.001&&+qty===20;
+  if(!ok){showFeedback("fb2","Есть ошибка. Сверь значения с условием и попробуй ещё раз.","bad");return}
+  if(saveTask(2,3)){
+    showFeedback("fb2","Верно! Запись проверена и добавлена в учебный просмотр. Начислено 3 балла.","good");
+    document.getElementById("recordTable").innerHTML=`<tr><th>Код</th><td>${escapeHTML(code)}</td></tr><tr><th>Название</th><td>${escapeHTML(name)}</td></tr><tr><th>Цена</th><td>${(+price).toFixed(2)} руб.</td></tr><tr><th>Количество</th><td>${escapeHTML(qty)}</td></tr>`;
+    document.getElementById("recordPreview").classList.remove("hidden");
+  }else showFeedback("fb2",`Задание уже оценено: ${scores[2]} из 3 баллов.`,"info");
+}
+function clearProduct(){["code","pname","price","qty"].forEach(id=>document.getElementById(id).value="");document.getElementById("recordPreview").classList.add("hidden")}
+function checkTask3(){
+  const selected=[...document.querySelectorAll('[name="err"]:checked')].map(x=>x.value);
+  if(!selected.length){showFeedback("fb3","Отметь ошибки, которые заметил.","bad");return}
+  const p=["price","qty"].filter(x=>selected.includes(x)).length,exact=p===2&&selected.length===2;
+  if(saveTask(3,p))showFeedback("fb3",exact?"Верно! Цена не должна быть отрицательной, а количество отдельных предметов обычно указывают целым числом.":"Найдено верных ошибок: "+p+" из 2. Правильные ответы: отрицательная цена и дробное количество.",exact?"good":"info");
+  else showFeedback("fb3",`Задание уже оценено: ${scores[3]} из 2 баллов.`,"info");
+}
+function checkTask4(){
+  const vals=["m1","m2","m3"].map(id=>document.getElementById(id).value);
+  if(vals.some(v=>!v)){showFeedback("fb4","Выбери значение для каждого поля.","bad");return}
+  const p=vals.filter((v,i)=>v===["name","qty","price"][i]).length;
+  if(saveTask(4,p))showFeedback("fb4",`Верно сопоставлено ${p} из 3. ${p===3?"Отлично!":"Повтори соответствия: название — Тетрадь, количество — 25, цена — 2,50 руб."}`,p===3?"good":"info");
+  else showFeedback("fb4",`Задание уже оценено: ${scores[4]} из 3 баллов.`,"info");
+}
+let selectedDrag=null;
+function wireDrag(){
+  document.querySelectorAll(".draggable").forEach(el=>{
+    el.addEventListener("dragstart",e=>{selectedDrag=el;e.dataTransfer.setData("text/plain",el.dataset.value)});
+    el.addEventListener("click",()=>{document.querySelectorAll(".draggable").forEach(x=>x.classList.remove("selected"));selectedDrag=el;el.classList.add("selected")});
+    el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click()}});
+  });
+  document.querySelectorAll(".dropzone").forEach(zone=>{
+    zone.addEventListener("dragover",e=>e.preventDefault());
+    zone.addEventListener("drop",e=>{e.preventDefault();const val=e.dataTransfer.getData("text/plain");placeDrag(val,zone)});
+    zone.addEventListener("click",()=>{if(selectedDrag)placeDrag(selectedDrag.dataset.value,zone)});
+    zone.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&selectedDrag){e.preventDefault();placeDrag(selectedDrag.dataset.value,zone)}});
+  });
+}
+function placeDrag(val,zone){
+  const item=document.querySelector(`.draggable[data-value="${val}"]`);if(!item)return;
+  const old=zone.dataset.value;
+  if(old){const oldItem=document.querySelector(`.draggable[data-value="${old}"]`);if(oldItem){oldItem.hidden=false;document.getElementById("dragBank").appendChild(oldItem)}}
+  zone.dataset.value=val;zone.textContent=item.textContent;item.hidden=true;item.classList.remove("selected");selectedDrag=null;
+}
+function checkTask5(){
+  const zones=[...document.querySelectorAll(".dropzone")];
+  if(zones.some(z=>!z.dataset.value)){showFeedback("fb5","Заполни все три области.","bad");return}
+  const p=zones.filter(z=>z.dataset.value===z.dataset.accept).length;
+  if(saveTask(5,p))showFeedback("fb5",`Правильно размещено ${p} из 3 элементов.`,p===3?"good":"info");
+  else showFeedback("fb5",`Задание уже оценено: ${scores[5]} из 3 баллов.`,"info");
+}
+function resetDrag(){
+  const bank=document.getElementById("dragBank");
+  document.querySelectorAll(".draggable").forEach(el=>{el.hidden=false;el.classList.remove("selected");bank.appendChild(el)});
+  document.querySelectorAll(".dropzone").forEach(z=>{delete z.dataset.value;z.textContent=({"name":"Перетащи сюда название","price":"Перетащи сюда цену","qty":"Перетащи сюда количество"}[z.dataset.accept])});
+}
+function checkTask6(){
+  const key=["a","b","a","c","a","b","b"];
+  const chosen=key.map((_,i)=>document.querySelector(`[name="q${i+1}"]:checked`));
+  if(chosen.some(x=>!x)){showFeedback("fb6","Ответь на все семь вопросов.","bad");return}
+  const p=chosen.reduce((sum,x,i)=>sum+(x.value===key[i]?1:0),0);
+  if(saveTask(6,p))showFeedback("fb6",`Итоговый тест: ${p} из 7 баллов. ${p>=6?"Отличный результат!":p>=4?"Хорошо. Повтори вопросы, где ошибся.":"Повтори теорию и попробуй ещё раз."}`,p>=5?"good":"info");
+  else showFeedback("fb6",`Тест уже оценён: ${scores[6]} из 7 баллов.`,"info");
+}
+function getStudent(){
+  const surname=document.getElementById("surname").value.trim(),first=document.getElementById("firstname").value.trim(),group=document.getElementById("group").value.trim(),email=document.getElementById("studentEmail").value.trim();
+  if(!surname||!first||!group){showFeedback("emailFeedback","Сначала заполни фамилию, имя и группу в начале страницы.","bad");document.getElementById("studentCard").scrollIntoView({behavior:"smooth"});return null}
+  return {surname,first,group,email};
+}
+function getResultText(){
+  const s=getStudent();if(!s)return null;
+  const total=Object.values(scores).reduce((a,b)=>a+b,0),done=Object.keys(completed).length;
+  return {s,total,done,details:Object.keys(completed).sort((a,b)=>a-b).map(k=>`${taskNames[k]}: ${scores[k]}/${taskMax[k]}`).join("\n")};
+}
+function showResult(){
+  const r=getResultText();if(!r)return;
+  let msg=`Студент: ${r.s.surname} ${r.s.first}, группа ${r.s.group}. Выполнено заданий: ${r.done} из 6. Баллы: ${r.total} из ${maxScore}. `;
+  msg+=r.done<6?"Выполни оставшиеся задания.":r.total>=17?"Отлично!":r.total>=12?"Хорошая работа! Повтори ошибки.":"Повтори теорию и попробуй ещё раз.";
+  document.getElementById("finalText").textContent=msg;
+}
+function downloadResult(){
+  const r=getResultText();if(!r)return;
+  const textResult=`Результат тренажёра «Формы базы данных»\nФамилия: ${r.s.surname}\nИмя: ${r.s.first}\nГруппа: ${r.s.group}\nЭлектронная почта: ${r.s.email||"не указана"}\nБаллы: ${r.total}/${maxScore}\nВыполнено заданий: ${r.done}/6\n\n${r.details}\n`;
+  const blob=new Blob([textResult],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`Результат_${r.s.surname}_${r.s.first}.txt`;a.click();URL.revokeObjectURL(url);
+}
+async function sendResult(){
+  const r=getResultText();if(!r)return;
+  if(r.done<6){showFeedback("emailFeedback","Сначала выполни все шесть заданий. Сейчас можно скачать промежуточный результат.","bad");return}
+  if(EMAILJS_PUBLIC_KEY.startsWith("ВСТАВЬТЕ")||EMAILJS_SERVICE_ID.startsWith("ВСТАВЬТЕ")||EMAILJS_TEMPLATE_ID.startsWith("ВСТАВЬТЕ")){
+    showFeedback("emailFeedback","Отправка ещё не настроена. Настрой EmailJS по инструкции в коде. Пока можно нажать «Скачать результат (.txt)» и отправить файл преподавателю вручную.","bad");return
+  }
+  if(typeof emailjs==="undefined"){showFeedback("emailFeedback","Библиотека EmailJS не подключена. Раскомментируй строку script EmailJS в коде и проверь подключение к интернету.","bad");return}
+  const btn=event?.currentTarget; if(btn)btn.disabled=true;
+  try{
+    emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
+    await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,{
+      to_email:TEACHER_EMAIL,
+      student_name:`${r.s.surname} ${r.s.first}`,
+      student_group:r.s.group,
+      student_email:r.s.email||"не указана",
+      score:String(r.total),
+      max_score:String(maxScore),
+      completed:`${r.done}/6`,
+      details:r.details,
+      sent_at:new Date().toLocaleString("ru-RU")
+    });
+    showFeedback("emailFeedback","Результат отправлен преподавателю на "+TEACHER_EMAIL+".","good");
+  }catch(err){showFeedback("emailFeedback","Не удалось отправить письмо. Проверь настройки EmailJS, Service ID, Template ID и интернет-соединение. Результат можно скачать в TXT.","bad")}
+  finally{if(btn)btn.disabled=false}
+}
+wireDrag();updateProgress();
+</script>
+</body>
+</html>
